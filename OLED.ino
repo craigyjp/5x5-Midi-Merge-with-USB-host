@@ -193,7 +193,7 @@ const uint8_t font5x7[] PROGMEM = { // space is at the bottom (=2 spaces with do
 #define SSD1306_DISPLAYALLON        0xA5 ///< Not currently used
 #define SSD1306_NORMALDISPLAY       0xA6 ///< See datasheet
 #define SSD1306_INVERTDISPLAY       0xA7 ///< See datasheet
-#define SSD1306_SETMULTIPLEX        0xA8 ///< See datasheet
+#define SSD1306_SETMULTIPLEX        0x3F ///< See datasheet
 #define SSD1306_DISPLAYOFF          0xAE ///< See datasheet
 #define SSD1306_DISPLAYON           0xAF ///< See datasheet
 #define SSD1306_COMSCANINC          0xC0 ///< Not currently used
@@ -206,7 +206,7 @@ const uint8_t font5x7[] PROGMEM = { // space is at the bottom (=2 spaces with do
 
 #define SSD1306_SETLOWCOLUMN        0x00 ///< Not currently used
 #define SSD1306_SETHIGHCOLUMN       0x10 ///< Not currently used
-#define SSD1306_SETSTARTLINE        0x40 ///< See datasheet
+#define SSD1306_SETSTARTLINE        0x80 ///< See datasheet
 
 #define SSD1306_EXTERNALVCC         0x01 ///< External display voltage source
 #define SSD1306_SWITCHCAPVCC        0x02 ///< Gen. display voltage from 3.3V
@@ -219,27 +219,34 @@ const uint8_t font5x7[] PROGMEM = { // space is at the bottom (=2 spaces with do
 #define SSD1306_ACTIVATE_SCROLL                      0x2F ///< Start scroll
 #define SSD1306_SET_VERTICAL_SCROLL_AREA             0xA3 ///< Set scroll range
 
-#define HEIGHT  0x20
+#define SSD1306_LCDWIDTH  128
+#define SSD1306_LCDHEIGHT  64
+
+#define HEIGHT  0x40
 #define WIDTH   0x80
+
+
 
 //#define HEIGHT  64
 //#define WIDTH   128
+
 void oled() {
   // Init sequence
-  static const uint8_t PROGMEM init1[] = {
+  static const uint8_t init1[] = {
     SSD1306_DISPLAYOFF,                   // 0xAE
     SSD1306_SETDISPLAYCLOCKDIV,           // 0xD5
-    0xA0,//0xA0, // 0x80,                                 // the suggested ratio 0x80... mainly to control scroll speed
+    0x80,                                // the suggested ratio 0x80... mainly to control scroll speed
     SSD1306_SETMULTIPLEX,
-    0x3f
+    0x3F
   };               // 0xA8
 
   ssd1306_commandList(init1, sizeof(init1));
+  
   ssd1306_command1(HEIGHT - 1);
 
-  static const uint8_t PROGMEM init2[] = {
+  static const uint8_t init2[] = {
     SSD1306_SETDISPLAYOFFSET,             // 0xD3
-    0x00,                                  // no offset
+    0x20,                                  // no offset
     SSD1306_SETSTARTLINE | 0x0,           // line #0
     SSD1306_CHARGEPUMP,
     0x14,
@@ -248,10 +255,7 @@ void oled() {
 
   ssd1306_commandList(init2, sizeof(init2));
 
-  //ssd1306_command1((vccstate == SSD1306_EXTERNALVCC) ? 0x10 : 0x14);
-  //ssd1306_command1(0x14);
-
-  static const uint8_t PROGMEM init3[] = {
+  static const uint8_t init3[] = {
     SSD1306_MEMORYMODE,                   // 0x20
     0x01,                                                           // 0x0 act like ks0108
     SSD1306_SEGREMAP | 0x1,
@@ -260,40 +264,28 @@ void oled() {
 
   ssd1306_commandList(init3, sizeof(init3));
 
-  // if ((WIDTH == 128) && (HEIGHT == 64)) {
-  static const uint8_t PROGMEM init4b[] = {
+  static const uint8_t  init4b[] = {
     SSD1306_SETCOMPINS,                 // 0xDA
-    0x02, //0x12,
+    0x12, //0x12,
     SSD1306_SETCONTRAST,
     0x8f, // 0xFF,
     SSD1306_SETPRECHARGE, //F1 is brightest
-    0xF1,
-    //   SSD1306_COLUMNADDR ,
-    //    0x00, 0x7f,
-    //    SSD1306_PAGEADDR,
-    //    0x00, 0x07
-
+    0xF1
   };              // 0x81
   ssd1306_commandList(init4b, sizeof(init4b));
-  // ssd1306_command1((vccstate == SSD1306_EXTERNALVCC) ? 0x9F : 0xCF);
-  //  }
 
-
-  // ssd1306_command1(SSD1306_SETPRECHARGE); // 0xd9
-  //ssd1306_command1((vccstate == SSD1306_EXTERNALVCC) ? 0x22 : 0xF1);
-  static const uint8_t PROGMEM init5[] = {
+  static const uint8_t  init5[] = {
     SSD1306_SETVCOMDETECT,               // 0xDB
     0x40, //was 40, works best! NOT EVEN IN DATASHEET!
     SSD1306_DISPLAYALLON_RESUME,         // 0xA4
     SSD1306_NORMALDISPLAY,               // 0xA6
-    // SSD1306_ACTIVATE_SCROLL,  //
     SSD1306_DEACTIVATE_SCROLL,
     SSD1306_DISPLAYON
   };                 // Main screen turn on
   ssd1306_commandList(init5, sizeof(init5));
 
 
-  static const uint8_t PROGMEM init6[] = {
+  static const uint8_t init6[] = {
     SSD1306_LEFT_HORIZONTAL_SCROLL,
     0x00,
     0x00,   //start page
@@ -303,7 +295,6 @@ void oled() {
     0xFF
   };
   ssd1306_commandList(init6, sizeof(init6));
-
 
 }
 
@@ -361,14 +352,8 @@ void OLED_UD(int count, byte cs, byte ce, byte ps, byte pe) {     //update whole
   wireBegin(); OLEDbusy = true;
   byte k = 0; byte s = 0;
   for (int i = 0; i < count; i++) {
-    //   if (bytesOut >= 30) {
     wireReBuff(30);// if (count < 1024) loop(); //call loop if not in menus...change this to menu flag etc..
-    //    }
     bytesOut++; k = 0;
-    //    if (lowFid == 1 && (i & 0x01) == 0) { //erase for keyboard display. Make bar across top
-    //      k = 1; if (s == 0) k = 3; //make notches every C note
-    //      s++; if (s > 11) s = 0;
-    //    }
     Wirewrite(k);
   }
   WireendTransmission(); OLEDbusy = false;  // stop transmitting
@@ -469,7 +454,7 @@ void standBy() { //display config # and user name when standby called every 10mS
   if (menuLev != 0)return;
   if (timeShow == 0) {
     timeShow = 5;
-    OLED_UD(512, 0, 127, 4, 7); //full screen
+    OLED_UD(512, 0, 127, 8, 7); //full screen
     String t = "T:"; if (hours < 10) t += " ";
     t += String(hours) + ":";
     if (mins < 10)t += "0";
@@ -489,7 +474,7 @@ void standBy() { //display config # and user name when standby called every 10mS
     }
     if (stbyStep > 399 && stbyStep < 1040) {
       if (stbyStep == 400) {
-        OLED_UD(512, 0, 127, 4, 7); //full screen
+        OLED_UD(512, 0, 127, 8, 7); //full screen
         //Serial.println(name);
       }
       nameStep++;
@@ -504,7 +489,7 @@ void standBy() { //display config # and user name when standby called every 10mS
       }
     }
     if (stbyStep == 1040) OLEDwerds("INCLOCK", 0, 0, 0);
-    if (stbyStep == 1140)  OLED_UD(512, 0, 127, 4, 7); //full screen
+    if (stbyStep == 1140)  OLED_UD(512, 0, 127, 8, 7); //full screen
     if (stbyStep == 1150) {
       String t = "ICK:";
       if ((clk1[0] & 0x01) || (clk1[1] & 0x01) || (clk1[2] & 0x01)) t += "1";
@@ -515,14 +500,14 @@ void standBy() { //display config # and user name when standby called every 10mS
       OLEDwerds(t, 0, 0, 0);
     }
     if (stbyStep == 1300) {
-      stbyStep = 0; OLED_UD(512, 0, 127, 4, 7); //full screen
+      stbyStep = 0; OLED_UD(512, 0, 127, 8, 7); //full screen
     }
   }
 }
 
 
 void arrow(byte c) { //tiny arrow to select menu items
-  OLED_UD(16, 0, 3, 4, 7);//clearColumn
+  OLED_UD(16, 0, 3, 8, 7);//clearColumn
   OLED_pointTo(0, 3, c + 4, c + 4 );
   wireBegin();  a[0] = 0xff; a[1] = 0x7e; a[2] = 0x3c; a[3] = 0x18;
   wireReBuff(20);
@@ -533,10 +518,10 @@ void arrow(byte c) { //tiny arrow to select menu items
 }
 
 void splash() {
-  OLED_UD(512, 0, 127, 4, 7);//clearColumn
-  OLED_pointTo(0, 127, 4, 7 );
+  OLED_UD(512, 0, 127, 8, 7);//clearColumn
+  OLED_pointTo(0, 127, 8, 7 );
   for (byte k = 0; k < 20; k++) {
-    OLED_pointTo(0, 127, 4, 7 );
+    OLED_pointTo(0, 127, 8, 7 );
     wireBegin(); wireReBuff(20);
     byte w = 1; byte h = random(255); byte ww = 1;
     for ( int i = 0; i < 512; i++) {
@@ -545,11 +530,11 @@ void splash() {
     }
     WireendTransmission();     // stop transmitting
     for ( int i = 0; i < 30; i++) {
-      OLEDwerdsSm("o", random(90) + 30, random(4), 1); delay(2);
+      OLEDwerdsSm("o", random(90) + 30, random(8), 1); delay(2);
     }
     delay(40);
   }
   for ( int i = 0; i < 512; i++) {
-    OLEDwerdsSm(" ", random(128), random(4), 1); delay(2);
+    OLEDwerdsSm(" ", random(128), random(8), 1); delay(2);
   }
 }

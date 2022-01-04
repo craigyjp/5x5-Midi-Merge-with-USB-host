@@ -32,7 +32,7 @@ void upButton() {
         if (splitSel < splitFid) {
           splitFid--; splitList(); //update
         }
-        OLED_UD(16, 0, 3, 4, 7); arrow(splitSel - splitFid);
+        OLED_UD(16, 0, 3, 8, 7); arrow(splitSel - splitFid);
       } else {
         splitEd = 0x80; splitAdj();
       }
@@ -46,20 +46,20 @@ void upButton() {
       nameIt();
     }
     if (menuLev == 9) {
-      ccSel--; if (ccSel == 255) ccSel = 2;
-      OLED_UD(4, 0, 3, ccSel + 1, ccSel + 1); arrow(ccSel + 1);
+      ccSel--; if (ccSel == 255) ccSel = 4;
+      OLED_UD(4, 0, 5, ccSel + 1, ccSel + 1); arrow(ccSel + 1);
     }
     if (menuLev == 8) {
-      tranSel--; if (tranSel == 255) tranSel = 2;
-      OLED_UD(4, 0, 3, tranSel + 1, tranSel + 1); arrow(tranSel + 1);
+      tranSel--; if (tranSel == 255) tranSel = 4;
+      OLED_UD(4, 0, 5, tranSel + 1, tranSel + 1); arrow(tranSel + 1);
     }
     if (menuLev == 7) {
-      pcSel--; if (pcSel == 255) pcSel = 2;
-      OLED_UD(4, 0, 3, pcSel + 1, pcSel + 1); arrow(pcSel + 1);
+      pcSel--; if (pcSel == 255) pcSel = 4;
+      OLED_UD(4, 0, 5, pcSel + 1, pcSel + 1); arrow(pcSel + 1);
     }
     if (menuLev == 6) {
-      clkSel--; if (clkSel == 255) clkSel = 2;
-      OLED_UD(4, 0, 3, clkSel + 1, clkSel + 1); arrow(clkSel + 1);
+      clkSel--; if (clkSel == 255) clkSel = 4;
+      OLED_UD(4, 0, 5, clkSel + 1, clkSel + 1); arrow(clkSel + 1);
     }
     if (menuLev == 5) {
       optSel--; if (optSel == 255)optSel = 4;
@@ -104,7 +104,7 @@ void dnButton() {
         if (splitSel > splitFid + 3) {
           splitFid++; splitList(); //update
         }
-        OLED_UD(16, 0, 3, 4, 7); arrow(splitSel - splitFid);
+        OLED_UD(16, 0, 3, 8, 7); arrow(splitSel - splitFid);
       } else {
         splitEd = 0x80; splitAdj();
       }
@@ -118,20 +118,20 @@ void dnButton() {
       nameIt();
     }
     if (menuLev == 9) {
-      ccSel++; if (ccSel > 2) ccSel = 0;
-      OLED_UD(4, 0, 3, ccSel + 1, ccSel + 1); arrow(ccSel + 1); //<<UD no need!wrong page, test remove
+      ccSel++; if (ccSel > 4) ccSel = 0;
+      OLED_UD(4, 0, 5, ccSel + 1, ccSel + 1); arrow(ccSel + 1); //<<UD no need!wrong page, test remove
     }
     if (menuLev == 8) {
-      tranSel++; if (tranSel > 2) tranSel = 0;
-      OLED_UD(4, 0, 3, tranSel + 1, tranSel + 1); arrow(tranSel + 1);
+      tranSel++; if (tranSel > 4) tranSel = 0;
+      OLED_UD(4, 0, 5, tranSel + 1, tranSel + 1); arrow(tranSel + 1);
     }
     if (menuLev == 7) {
-      pcSel++; if (pcSel > 2) pcSel = 0;
-      OLED_UD(4, 0, 3, pcSel + 1, pcSel + 1); arrow(pcSel + 1);
+      pcSel++; if (pcSel > 4) pcSel = 0;
+      OLED_UD(4, 0, 5, pcSel + 1, pcSel + 1); arrow(pcSel + 1);
     }
     if (menuLev == 6) {
-      clkSel++; if (clkSel > 2) clkSel = 0;
-      OLED_UD(4, 0, 3, clkSel + 1, clkSel + 1); arrow(clkSel + 1);
+      clkSel++; if (clkSel > 4) clkSel = 0;
+      OLED_UD(4, 0, 5, clkSel + 1, clkSel + 1); arrow(clkSel + 1);
     }
     if (menuLev == 5) {
       optSel++; if (optSel > 4)optSel = 0;
@@ -294,7 +294,6 @@ void menuLev1() { //for up down
 void menuLev1Sel() { //select
   switch (lev1Ptr) {
 
-
     case 1: //M_IN:1
     case 2: //M_IN:2
     case 3: //M_IN:3
@@ -423,7 +422,7 @@ void inOutGet(byte ch) { //send 0-15 (ch) returns array value to chanAdj
         case 1: chanAdj = in3out2[ch]; break;
         case 2: chanAdj = in3out3[ch]; break;
         case 3: chanAdj = in3out4[ch]; break;
-        case 4: chanAdj = in3out4[ch]; break;
+        case 4: chanAdj = in3out5[ch]; break;
       }
       break;
     case 3:
@@ -441,7 +440,7 @@ void inOutGet(byte ch) { //send 0-15 (ch) returns array value to chanAdj
         case 1: chanAdj = in5out2[ch]; break;
         case 2: chanAdj = in5out3[ch]; break;
         case 3: chanAdj = in5out4[ch]; break;
-        case 4: chanAdj = in5out4[ch]; break;
+        case 4: chanAdj = in5out5[ch]; break;
       }
       break;
   }
@@ -537,7 +536,7 @@ void optList() {
 void clockSet() { //menuLev=6 <<<<May eveolve into auto-clock
   OLEDwerdsSm(F("CLOCK TO:"), 6, 0, 0); OLEDwerdsSm(F("OUT 1:"), 6, 1, 0); OLEDwerdsSm(F("OUT 2:"), 6, 2, 0); OLEDwerdsSm(F("OUT 3:"), 6, 3, 0); OLEDwerdsSm(F("OUT 4:"), 6, 4, 0); OLEDwerdsSm(F("OUT 5:"), 6, 5, 0);
   //Serial.print("lev1Ptr="); Serial.println(lev1Ptr - 1);
-  for (byte i = 0; i < 3; i++) {
+  for (byte i = 0; i < 5; i++) {
     byte k = 0;
     switch (lev1Ptr - 1) {
       case 0: k = clk1[i]; break;
@@ -587,7 +586,7 @@ void clockSetSel() { // toggle y/n
 
 void pcSet() {
   OLEDwerdsSm(F("PROGRAM CHANGE TO:"), 6, 0, 0); OLEDwerdsSm(F("OUT 1:"), 6, 1, 0); OLEDwerdsSm(F("OUT 2:"), 6, 2, 0); OLEDwerdsSm(F("OUT 3:"), 6, 3, 0); OLEDwerdsSm(F("OUT 4:"), 6, 4, 0); OLEDwerdsSm(F("OUT 5:"), 6, 5, 0);
-  for (byte i = 0; i < 3; i++) {
+  for (byte i = 0; i < 5; i++) {
     byte k = 0;
     switch (lev1Ptr - 1) {
       case 0: k = clk1[i]; break;
@@ -639,11 +638,11 @@ void pcSetSel() {
 void tranSet() {
   String t = String(lev1Ptr);
   OLEDwerdsSm(F("MIDI TRANSPORT TO:"), 6, 0, 0);
-  for (byte i = 1; i < 4; i++) {
+  for (byte i = 1; i < 6; i++) {
     OLEDwerdsSm(F("IN:"), 6, i, 0); OLEDwerdsSm(t, 24, i, 0);
   }
   OLEDwerdsSm(F("> OUT 1:"), 36, 1, 0); OLEDwerdsSm(F("> OUT 2:"), 36, 2, 0); OLEDwerdsSm(F("> OUT 3:"), 36, 3, 0); OLEDwerdsSm(F("> OUT 4:"), 36, 4, 0); OLEDwerdsSm(F("> OUT 5:"), 36, 5, 0);
-  for (byte i = 0; i < 3; i++) {
+  for (byte i = 0; i < 5; i++) {
     byte k = 0;
     switch (lev1Ptr - 1) {
       case 0: k = clk1[i]; break;
@@ -699,7 +698,7 @@ void ccSet() {
     OLEDwerdsSm(F("IN:"), 6, i, 0); OLEDwerdsSm(t, 24, i, 0);
   }
   OLEDwerdsSm(F("> OUT 1:"), 36, 1, 0); OLEDwerdsSm(F("> OUT 2:"), 36, 2, 0); OLEDwerdsSm(F("> OUT 3:"), 36, 3, 0); OLEDwerdsSm(F("> OUT 4:"), 36, 4, 0); OLEDwerdsSm(F("> OUT 5:"), 36, 5, 0);
-  for (byte i = 0; i < 3; i++) {
+  for (byte i = 0; i < 5; i++) {
     byte k = 0;
     switch (lev1Ptr - 1) {
       case 0: k = clk1[i]; break;

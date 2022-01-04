@@ -11,7 +11,6 @@
 */
 
 #include <EEPROM.h>
-#include <avr/pgmspace.h>
 #include <Wire.h> //uses i2c for OLED Display
 #include <MIDI.h>
 #include <USBHost_t36.h>
@@ -26,6 +25,10 @@
 #define OUT_LED3 28
 #define OUT_LED4 9
 #define OUT_LED5 36
+
+#define UP_BUTTON 12
+#define DOWN_BUTTON 11
+#define SELECT 24
 
 // digital pin 2 has a pushbutton attached to it. Give it a name:
 byte cable = 0;
@@ -363,9 +366,9 @@ void setup() {
 
   overLap[0] = 0; overLap[1] = 0; overLap[2] = 0;
 
-  pinMode(12, INPUT_PULLUP); //UP button
-  pinMode(11, INPUT_PULLUP); //DN button
-  pinMode(24, INPUT_PULLUP);  //SEL
+  pinMode(UP_BUTTON, INPUT_PULLUP); //UP button
+  pinMode(DOWN_BUTTON, INPUT_PULLUP); //DN button
+  pinMode(SELECT, INPUT_PULLUP);  //SEL
   pinMode(IN_LED1, OUTPUT);
   pinMode(IN_LED2, OUTPUT);
   pinMode(IN_LED3, OUTPUT);
@@ -393,8 +396,8 @@ void setup() {
   OLEDwerds("MERGE", 20, 0, 0); //6 chars max...CONF:1
   delay(200);
 
-  if ( !digitalRead(12) && !digitalRead(11)) factory(); //hold up & down buttons to do factory reset, no warning!
-  user = EEPROM.read(2047);
+  if ( !digitalRead(UP_BUTTON) && !digitalRead(DOWN_BUTTON)) factory(); //hold up & down buttons to do factory reset, no warning!
+  user = EEPROM.read(4095);
   userSel();
 
   for (int i = 0; i < 256; i++) { //initiate note ons
@@ -514,17 +517,17 @@ void loop()
   if (millis() > butMillisNext) { //scan buttons every 10mS. don't use for any timed app as is set tp 50 by release!
     butMillisNext += 10;
 
-    if (!digitalRead(12)) { //UP
+    if (!digitalRead(UP_BUTTON)) { //UP
       upButton();
     } else {
       if (upHeld != 0) UPrelease();
     }
-    if (!digitalRead(11)) { //DN
+    if (!digitalRead(DOWN_BUTTON)) { //DN
       dnButton();
     } else {
       if (dnHeld != 0) DNrelease();
     }
-    if (!digitalRead(24)) { //SEL
+    if (!digitalRead(SELECT)) { //SEL
       selButton();
     } else {
       if (selHeld != 0) SELrelease();

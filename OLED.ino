@@ -454,7 +454,7 @@ void standBy() { //display config # and user name when standby called every 10mS
   if (menuLev != 0)return;
   if (timeShow == 0) {
     timeShow = 5;
-    OLED_UD(512, 0, 127, 8, 7); //full screen
+    OLED_UD(1024, 0, 127, 8, 7); //full screen
     String t = "T:"; if (hours < 10) t += " ";
     t += String(hours) + ":";
     if (mins < 10)t += "0";
@@ -474,7 +474,7 @@ void standBy() { //display config # and user name when standby called every 10mS
     }
     if (stbyStep > 399 && stbyStep < 1040) {
       if (stbyStep == 400) {
-        OLED_UD(512, 0, 127, 8, 7); //full screen
+        OLED_UD(1024, 0, 127, 8, 7); //full screen
         //Serial.println(name);
       }
       nameStep++;
@@ -489,7 +489,7 @@ void standBy() { //display config # and user name when standby called every 10mS
       }
     }
     if (stbyStep == 1040) OLEDwerds("INCLOCK", 0, 0, 0);
-    if (stbyStep == 1140)  OLED_UD(512, 0, 127, 8, 7); //full screen
+    if (stbyStep == 1140)  OLED_UD(1024, 0, 127, 8, 7); //full screen
     if (stbyStep == 1150) {
       String t = "ICK:";
       if ((clk1[0] & 0x01) || (clk1[1] & 0x01) || (clk1[2] & 0x01)) t += "1";
@@ -500,7 +500,7 @@ void standBy() { //display config # and user name when standby called every 10mS
       OLEDwerds(t, 0, 0, 0);
     }
     if (stbyStep == 1300) {
-      stbyStep = 0; OLED_UD(512, 0, 127, 8, 7); //full screen
+      stbyStep = 0; OLED_UD(1024, 0, 127, 8, 7); //full screen
     }
   }
 }
@@ -518,7 +518,8 @@ void arrow(byte c) { //tiny arrow to select menu items
 }
 
 void splash() {
-  OLED_UD(512, 0, 127, 8, 7);//clearColumn
+  OLED_UD(1024, 0, 127, 8, 7);//clearColumn
+//  delay(2000);
   OLED_pointTo(0, 127, 8, 7 );
   for (byte k = 0; k < 20; k++) {
     OLED_pointTo(0, 127, 8, 7 );

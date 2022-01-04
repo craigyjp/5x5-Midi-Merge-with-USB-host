@@ -361,7 +361,7 @@ void setup() {
   delay(10);
   splash();
   delay(100);
-  OLED_UD(512, 0, 127, 4, 7); //full screen whatever
+  OLED_UD(1024, 0, 127, 8, 7); //full screen whatever
   OLEDwerds("MIDI", 30, 0, 0);
 
   overLap[0] = 0; overLap[1] = 0; overLap[2] = 0;

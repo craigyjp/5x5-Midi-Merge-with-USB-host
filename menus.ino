@@ -171,7 +171,7 @@ void selButton() {
     // Serial.println(menuLev);
     if (menuLev == 0) {
       user++; if (user > 4) user = 0; //temp here, must use up down after selection
-      OLED_UD(512, 0, 127, 4, 7); //full screen
+      OLED_UD(1024, 0, 127, 8, 7); //full screen
       userSel(); nameScroll = 0; stbyStep = 99; nameStep = 0; timeShow = 2; standBy();
       allNotesOff(16, 4);
     }
@@ -277,7 +277,7 @@ void SELrelease() {
 
 
 void menuLev1() { //for up down
-  OLED_UD(512, 0, 127, 4, 7);
+  OLED_UD(1024, 0, 127, 8, 7);
   String  t = F("SAVE:"); t += String(user + 1);
   switch (lev1Ptr) {
     case 0: OLEDwerds(t, 0, 0, 0); break; //SAVE
@@ -302,7 +302,7 @@ void menuLev1Sel() { //select
       menuLev = 2; menuLev2();
       break;
     case 6: //NAME
-      menuLev = 10; OLED_UD(512, 0, 127, 4, 7); nameIt();
+      menuLev = 10; OLED_UD(1024, 0, 127, 8, 7); nameIt();
       break;
     case 0:
       OLEDwerds(F("SAVING"), 0, 0, 0); saveConfig(); allNotesOff(16, 4); // //do a save!
@@ -313,7 +313,7 @@ void menuLev1Sel() { //select
 }
 
 void menuLev2() {
-  OLED_UD(512, 0, 127, 4, 7);
+  OLED_UD(1024, 0, 127, 8, 7);
   OLEDwerdsSm("I", 0, 0, 1); OLEDwerdsSm("N", 0, 1, 1); OLEDwerdsSm(String(lev1Ptr), 0, 3, 1);
   String  t = "SPLIT"; t += String(lev1Ptr); //1,2 or 3
   switch (lev2Ptr) {
@@ -360,7 +360,7 @@ void nameIt() { //menuLev=10. up/down to select a letter
 
 
 void outList() { //show list at last fid ... not for edit!
-  OLED_UD(512, 0, 127, 4, 7);
+  OLED_UD(1024, 0, 127, 8, 7);
   for (byte i = 0; i < 4; i++) {
     if (i + outListFid == 16 && i == 3) {
       OLEDwerdsSm(F("DISABLE?"), 6, i, 8);
@@ -511,7 +511,7 @@ void togAll() {
 }
 
 void menuOpt() { //menuLev=5
-  OLED_UD(512, 0, 127, 4, 7);
+  OLED_UD(1024, 0, 127, 8, 7);
   OLEDwerdsSm("I", 0, 0, 1); OLEDwerdsSm("N", 0, 1, 1); OLEDwerdsSm(String(lev1Ptr), 0, 3, 1);
   switch (optSel) {
     case 0: OLEDwerds(F("CLOCK"), 8, 0, 0); break;
@@ -523,7 +523,7 @@ void menuOpt() { //menuLev=5
 }
 
 void optList() {
-  OLED_UD(512, 0, 127, 4, 7);
+  OLED_UD(1024, 0, 127, 8, 7);
   switch (optSel) {
     case 0: clockSet(); menuLev = 6; break; //OLEDwerds("CLOCK", 8, 0, 0)
     case 1: pcSet(); menuLev = 7; break; //OLEDwerds("MIDIPC", 8, 0, 0);
@@ -750,7 +750,7 @@ void ccSetSel() {
 void splitList() { //display/refresh SPLIT menu
   ip = splitFid; // splitSel is actual line select #
   //byte sch = 0; //pull from split1,2,3
-  OLED_UD(512, 0, 127, 4, 7);
+  OLED_UD(1024, 0, 127, 8, 7);
   arrow(splitSel - splitFid);
   if (!splitEd) splitGet();
   sf0(); sf1(); sf2(); sf3(); sf4(); sf5(); sf6(); sf7(); sf8(); sf9(); sf10(); sf11(); sf12(); sf13(); sf14(); sf15();

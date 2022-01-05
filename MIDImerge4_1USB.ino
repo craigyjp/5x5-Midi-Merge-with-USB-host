@@ -12,7 +12,6 @@
 
 #include <EEPROM.h>
 #include <Wire.h> //uses i2c for OLED Display
-#include <MIDI.h>
 #include <USBHost_t36.h>
 
 #define IN_LED1 2
